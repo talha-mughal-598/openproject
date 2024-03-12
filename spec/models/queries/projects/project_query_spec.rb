@@ -133,7 +133,7 @@ RSpec.describe ProjectQuery do
                             :favored,
                             :public,
                             :description,
-                            :hierarchy,
+                            :lft,
                             :project_status,
                             :status_explanation)
     end
@@ -147,7 +147,7 @@ RSpec.describe ProjectQuery do
                               :public,
                               :favored,
                               :description,
-                              :hierarchy,
+                              :lft,
                               :project_status,
                               :status_explanation,
                               :created_at,
@@ -165,7 +165,7 @@ RSpec.describe ProjectQuery do
                               :public,
                               :favored,
                               :description,
-                              :hierarchy,
+                              :lft,
                               :project_status,
                               :status_explanation,
                               :cf_23,
