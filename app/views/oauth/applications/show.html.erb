@@ -31,6 +31,7 @@ See COPYRIGHT and LICENSE files for more details.
 
 <%= toolbar title: "#{t('oauth.application.singular')} - #{h(@application.name)}",
             title_class: 'no-padding-bottom' do %>
+  <% unless @application.builtin? %>
   <li class="toolbar-item">
     <%= link_to edit_oauth_application_path(@application),
                 class: 'button' do %>
@@ -47,6 +48,7 @@ See COPYRIGHT and LICENSE files for more details.
       <span class="button--text"><%= t(:button_delete) %></span>
     <% end %>
   </li>
+  <% end %>
 <% end %>
 
 <%= render(AttributeGroups::AttributeGroupComponent.new) do |component| %>

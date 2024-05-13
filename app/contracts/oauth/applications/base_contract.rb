@@ -27,38 +27,48 @@
 #++
 
 module OAuth
-  class ApplicationContract < ::ModelContract
-    def self.model
-      ::Doorkeeper::Application
-    end
-
-    validate :validate_client_credential_user
-    validate :validate_integration
-
-    attribute :name
-    attribute :redirect_uri
-    attribute :confidential
-    attribute :owner_id
-    attribute :owner_type
-    attribute :scopes
-    attribute :client_credentials_user_id
-    attribute :integration_id
-    attribute :integration_type
-
-    private
-
-    def validate_integration
-      if (model.integration_id.nil? && model.integration_type.present?) ||
-         (model.integration_id.present? && model.integration_type.nil?)
-        errors.add :integration, :invalid
+  module Applications
+    class BaseContract < ::ModelContract
+      def self.model
+        ::Doorkeeper::Application
       end
-    end
 
-    def validate_client_credential_user
-      return if model.client_credentials_user_id.blank?
+      validate :validate_client_credential_user
+      validate :validate_integration
+      validate :validate_admin_only
 
-      unless User.exists?(id: model.client_credentials_user_id)
-        errors.add :client_credentials_user_id, :invalid
+      attribute :enabled
+      attribute :name
+      attribute :redirect_uri
+      attribute :confidential
+      attribute :owner_id
+      attribute :owner_type
+      attribute :scopes
+      attribute :client_credentials_user_id
+      attribute :integration_id
+      attribute :integration_type
+
+      private
+
+      def validate_admin_only
+        unless user.active_admin?
+          errors.add :base, :error_unauthorized
+        end
+      end
+
+      def validate_integration
+        if (model.integration_id.nil? && model.integration_type.present?) ||
+          (model.integration_id.present? && model.integration_type.nil?)
+          errors.add :integration, :invalid
+        end
+      end
+
+      def validate_client_credential_user
+        return if model.client_credentials_user_id.blank?
+
+        unless User.exists?(id: model.client_credentials_user_id)
+          errors.add :client_credentials_user_id, :invalid
+        end
       end
     end
   end

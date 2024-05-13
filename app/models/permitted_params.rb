@@ -552,6 +552,7 @@ class PermittedParams
           :name,
           :redirect_uri,
           :confidential,
+          :enabled,
           :client_credentials_user_id,
           { scopes: [] }
         ],

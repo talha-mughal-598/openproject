@@ -26,29 +26,27 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module OAuthClients
-  class CreateContract < ::ModelContract
-    include ActiveModel::Validations
+module OAuth
+  module Applications
+    class SetAttributesService < ::BaseServices::SetAttributes
+      private
 
-    attribute :client_id, writable: true
-    validates :client_id, presence: true, length: { maximum: 255 }
+      def set_default_attributes(*)
+        model.extend(OpenProject::ChangedBySystem)
+        model.change_by_system do
+          set_secret_and_id
+          set_default_owner unless model.owner_id
+        end
+      end
 
-    attribute :client_secret, writable: true
-    validates :client_secret, presence: true, length: { maximum: 255 }
+      def set_secret_and_id
+        model.renew_secret if model.secret.blank?
+        model.uid = Doorkeeper::OAuth::Helpers::UniqueToken.generate if model.uid.blank?
+      end
 
-    attribute :integration_type, writable: true
-    validates :integration_type, presence: true
-
-    attribute :integration_id, writable: true
-    validates :integration_id, presence: true
-
-    validate :validate_user_allowed
-
-    private
-
-    def validate_user_allowed
-      unless user.active_admin?
-        errors.add :base, :error_unauthorized
+      def set_default_owner
+        model.owner = user
+        model.owner_type = "User"
       end
     end
   end

@@ -26,29 +26,20 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module OAuthClients
-  class CreateContract < ::ModelContract
-    include ActiveModel::Validations
+module OAuth
+  module Applications
+    class CreateContract < BaseContract
+      attribute :builtin
+      attribute :uid
 
-    attribute :client_id, writable: true
-    validates :client_id, presence: true, length: { maximum: 255 }
+      validate :validate_owner_present
 
-    attribute :client_secret, writable: true
-    validates :client_secret, presence: true, length: { maximum: 255 }
+      private
 
-    attribute :integration_type, writable: true
-    validates :integration_type, presence: true
-
-    attribute :integration_id, writable: true
-    validates :integration_id, presence: true
-
-    validate :validate_user_allowed
-
-    private
-
-    def validate_user_allowed
-      unless user.active_admin?
-        errors.add :base, :error_unauthorized
+      def validate_owner_present
+        if model.owner.blank?
+          errors.add(:owner, :blank)
+        end
       end
     end
   end

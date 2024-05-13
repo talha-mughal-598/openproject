@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #-- copyright
 # OpenProject is an open source project management software.
 # Copyright (C) 2012-2024 the OpenProject GmbH
@@ -26,30 +28,11 @@
 # See COPYRIGHT and LICENSE files for more details.
 #++
 
-module OAuthClients
-  class CreateContract < ::ModelContract
-    include ActiveModel::Validations
+require "spec_helper"
+require "services/base_services/behaves_like_delete_service"
 
-    attribute :client_id, writable: true
-    validates :client_id, presence: true, length: { maximum: 255 }
-
-    attribute :client_secret, writable: true
-    validates :client_secret, presence: true, length: { maximum: 255 }
-
-    attribute :integration_type, writable: true
-    validates :integration_type, presence: true
-
-    attribute :integration_id, writable: true
-    validates :integration_id, presence: true
-
-    validate :validate_user_allowed
-
-    private
-
-    def validate_user_allowed
-      unless user.active_admin?
-        errors.add :base, :error_unauthorized
-      end
-    end
+RSpec.describe OAuth::Applications::DeleteService, type: :model do
+  it_behaves_like "BaseServices delete service" do
+    let(:factory) { :oauth_application }
   end
 end
