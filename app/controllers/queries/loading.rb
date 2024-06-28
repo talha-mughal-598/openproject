@@ -62,7 +62,15 @@ module Queries
     end
 
     def query_class
-      "#{self.class.name.chomp('Controller').singularize}Query".constantize
+      controller_name = self.class.name.demodulize
+
+      model_name = if controller_name == "QueriesController"
+                     self.class.name.deconstantize
+                   else
+                     controller_name.chomp("Controller")
+                   end
+
+      "#{model_name.singularize}Query".constantize
     end
   end
 end

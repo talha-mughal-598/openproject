@@ -24,26 +24,25 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See COPYRIGHT and LICENSE files for more details.
-#++
+# ++
 
-module ProjectQueries
-  class PublishService < BaseServices::Update
-    private
+class MeetingQuery
+  include ::Queries::BaseQuery
+  include ::Queries::UnpersistedQuery
 
-    def after_validate(params, service_call)
-      model.public = params[:public]
+  def self.model
+    Meeting
+  end
 
-      service_call
-    end
+  def results
+    super
+    .includes(:project, :author)
+  end
 
-    def persist(service_call)
-      model.save
-
-      service_call
-    end
-
-    def default_contract_class
-      ProjectQueries::PublishContract
-    end
+  def default_scope
+    Meeting.visible(user)
   end
 end
+
+# This is necessary to have the filters, orders and selects loaded in dev environment
+require 'queries/meetings'
