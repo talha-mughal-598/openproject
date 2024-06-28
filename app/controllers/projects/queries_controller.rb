@@ -27,7 +27,7 @@
 # ++
 
 class Projects::QueriesController < ApplicationController
-  include Projects::QueryLoading
+  include Queries::Loading
   include OpTurbo::ComponentStream
 
   # No need for a more specific authorization check. That is carried out in the contracts.
