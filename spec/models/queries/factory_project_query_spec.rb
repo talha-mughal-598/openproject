@@ -30,7 +30,7 @@ require "spec_helper"
 require "services/base_services/behaves_like_create_service"
 
 RSpec.describe Queries::Factory,
-               'ProjectQuery',
+               "ProjectQuery",
                with_settings: { enabled_projects_columns: %w[favored name project_status] } do
   before do
     scope = instance_double(ActiveRecord::Relation)
