@@ -48,25 +48,18 @@ See COPYRIGHT and LICENSE files for more details.
             </tr>
           </thead>
           <tbody>
-          <% if rows.empty? %>
-            <tr class="generic-table--empty-row">
-              <td colspan="<%= columns.length + 1 %>"><%= empty_row_message %></td>
-            </tr>
-          <% end %>
-          <%= render_rows %>
+            <% if rows.empty? %>
+              <tr class="generic-table--empty-row">
+                <td colspan="<%= columns.length + 1 %>"><%= empty_row_message %></td>
+              </tr>
+            <% else %>
+              <%= render_rows %>
+            <% end %>
           </tbody>
         </table>
-
-        <% if inline_create_link && show_inline_create %>
-          <div class="wp-inline-create-button">
-            <%= inline_create_link %>
-          </div>
-        <% end %>
       </div>
     </div>
   </div>
 </div>
 
-<% if paginated? %>
-  <%= helpers.pagination_links_full model, pagination_options %>
-<% end %>
+<%= helpers.pagination_links_full rows, pagination_options %>
