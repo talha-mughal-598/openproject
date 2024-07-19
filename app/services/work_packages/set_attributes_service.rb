@@ -250,8 +250,6 @@ class WorkPackages::SetAttributesService < BaseServices::SetAttributes
       set_version_to_nil
       reassign_category
       set_parent_to_nil
-
-      reassign_type unless work_package.type_id_changed?
     end
   end
 
@@ -450,18 +448,6 @@ class WorkPackages::SetAttributesService < BaseServices::SetAttributes
 
       work_package.category = category
     end
-  end
-
-  def reassign_type
-    available_types = work_package.project.types.order(:position)
-
-    return if available_types.include?(work_package.type) && work_package.type
-
-    work_package.type = available_types.first
-    update_duration
-    unify_milestone_dates
-
-    reassign_status assignable_statuses
   end
 
   def reassign_status(available_statuses)

@@ -2080,36 +2080,22 @@ RSpec.describe WorkPackages::SetAttributesService,
         context "when a default type exists in new project" do
           let(:new_types) { [other_type, default_type] }
 
-          it "uses the first type (by position)" do
+          it "leaves the type" do
             subject
 
             expect(work_package.type)
-              .to eql other_type
-          end
-
-          it "adds change to system changes" do
-            subject
-
-            expect(work_package.changed_by_system["type_id"])
-              .to eql [initial_type.id, other_type.id]
+              .to eql type
           end
         end
 
         context "when no default type exists in new project" do
           let(:new_types) { [other_type, yet_another_type] }
 
-          it "uses the first type (by position)" do
+          it "leaves the type" do
             subject
 
             expect(work_package.type)
-              .to eql other_type
-          end
-
-          it "adds change to system changes" do
-            subject
-
-            expect(work_package.changed_by_system["type_id"])
-              .to eql [initial_type.id, other_type.id]
+              .to eql type
           end
         end
 
